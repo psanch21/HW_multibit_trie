@@ -168,7 +168,7 @@ int main(int argc, char  *argv[]) {
     return 0;
   }
 
-  int result = OK;
+  int result = OK; //Variable to handle errors
 
 
 
