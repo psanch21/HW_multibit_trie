@@ -1,0 +1,10 @@
+80.1.3.4;MISS;1;0
+129.3.4.4;MISS;1;0
+212.1.2.4;MISS;1;0
+
+Packets processed= 3
+Average table accesses= 1.00
+Average packet processing time (usecs)= 0.00
+Memory (Kbytes) = 34692
+CPU Time (secs)= 0.052000
+
