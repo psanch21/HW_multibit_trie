@@ -6,7 +6,7 @@
 
 
 // http://stackoverflow.com/questions/10079056/what-does-the-in-int-30-mean OJO
-
+//uintx_t means unsigned
 
 /*---------------------------------------------------------------------------*/
 /* Variable declarations                                                     */
