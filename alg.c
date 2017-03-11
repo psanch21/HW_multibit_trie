@@ -101,14 +101,14 @@ int fillTBLLong(uint32_t prefix, int prefixLength, int outInterface){
 
     uint32_t lowbyte = getLast8Prefix(prefix);
 
-    createTBLLong(prefix);//This method increases numOfTBLL
+    createTBLLong();//This method increases numOfTBLL
 
     int start = indexLong*256;
     int i;
     int j = 0;
     int count = pow(2,32 - prefixLength );
     for(i = start; i<start + 256;i++){
-      if(j<lowbyte || j> lowbyte +count){
+      if(j<lowbyte || j>= (lowbyte +count)){
         TBLLong[i] = tmpEntry;
       }else{
        TBLLong[i] = (uint16_t)outInterface;
