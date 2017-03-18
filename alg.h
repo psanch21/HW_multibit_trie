@@ -27,7 +27,7 @@
 /* Function prototypes                                                       */
 /*---------------------------------------------------------------------------*/
 
-uint32_t get24Index(uint32_t prefix);
+uint32_t get24Index(uint32_t prefix, int prefixLength);
 uint32_t getLast8Prefix(uint32_t prefix);
 uint32_t getLongIndex(int16_t entry, uint32_t prefix);
 
@@ -37,7 +37,7 @@ int insert(uint32_t prefix, int prefixLength, int outInterface);
 int fillTBL24(uint32_t prefix, int prefixLength, int outInterface);
 int fillTBLLong(uint32_t prefix, int prefixLength, int outInterface);
 void freeTables();
-int checkTBLLInEntry(int16_t entry);
+int checkTBLLInEntry(uint16_t entry);
 
 int lookup(uint32_t IPAddress, int * outInterface, int* numberOfHashtables);
 #endif /* ALG_H_ */

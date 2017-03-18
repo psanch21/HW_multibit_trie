@@ -38,12 +38,19 @@ int createTBLLong(){
     free(TBLLong);
     return ALLOC_FAIL;
   }
+
+  uint32_t i;
+  for(i=numOfTBLL*256; i < (numOfTBLL*256 + 256);i++){
+    TBLLong[i] = 0;
+
+
+  }
   numOfTBLL++;
   return OK;
 
 }
 
-int checkTBLLInEntry(int16_t entry){
+int checkTBLLInEntry(uint16_t entry){
   if(entry >=32768){//2 to the power of 15
     return 1;//There is TBL
   }else{
@@ -51,9 +58,18 @@ int checkTBLLInEntry(int16_t entry){
   }
 }
 
-uint32_t get24Index(uint32_t prefix){
-  uint32_t tmp = prefix & 0xffffff00;
+uint32_t get24Index(uint32_t prefix,int prefixLength){
+  uint32_t tmp;
+  if(prefixLength !=-1){
+      int n;
+      getNetmask(prefixLength,&n);
+      tmp = prefix & n;
+  }else{
+    tmp = prefix & 0xffffff00;
+  }
+
   tmp = tmp>>8;
+
   return tmp;
 }
 
@@ -70,17 +86,20 @@ uint32_t getLast8Prefix(uint32_t prefix){
 
 
 int fillTBL24(uint32_t prefix, int prefixLength, int outInterface){
-  uint32_t index24 = get24Index(prefix);
+  uint32_t index24 = get24Index(prefix,prefixLength);
   uint32_t i;
   uint32_t count = pow(2,24-prefixLength);
   for(i=index24; i < (index24+count);i++){
     TBL24[i] = (uint16_t)outInterface;
+
+
   }
   return OK;
 }
 
 int fillTBLLong(uint32_t prefix, int prefixLength, int outInterface){
-  uint32_t index24 = get24Index(prefix);
+  uint32_t index24 = get24Index(prefix,prefixLength);
+
   if(checkTBLLInEntry(TBL24[index24])){
     uint32_t start = (TBL24[index24] & 0x7fff)*256;
     uint32_t i;
@@ -89,13 +108,13 @@ int fillTBLLong(uint32_t prefix, int prefixLength, int outInterface){
     uint32_t count = pow(2,32 - prefixLength );
     for(i = start; i<start + 256;i++){
       if(j>=lowbyte && j< lowbyte +count){
-       TBLLong[i] =(uint16_t) outInterface;
+        TBLLong[i] =(uint16_t) outInterface;
       }
       j++;
     }
 
   }else{ //Create TBLLong 
-    int16_t tmpEntry = TBL24[index24];
+    uint16_t tmpEntry = TBL24[index24];
     uint16_t indexLong = numOfTBLL;
     TBL24[index24] =indexLong | 0x8000;
 
@@ -116,7 +135,6 @@ int fillTBLLong(uint32_t prefix, int prefixLength, int outInterface){
       j++;
     }
   }
-  
 
   return OK;
 }
@@ -140,7 +158,7 @@ void freeTables(){
 
 
 int lookup(uint32_t IPAddress, int * outInterface, int* numberOfHashtables){
-  uint32_t index24 = get24Index(IPAddress);
+  uint32_t index24 = get24Index(IPAddress,-1);
   uint16_t entry24 = TBL24[index24];
   if(entry24>=32768){
     uint32_t lowbyte = getLast8Prefix(IPAddress);
